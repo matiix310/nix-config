@@ -17,20 +17,11 @@ in
       description = "Whether to enable hyprlock.";
       type = lib.types.bool;
     };
-    # The 'nix' hyprlock is only working on nixos atm: https://github.com/hyprwm/hyprlock/issues/135
-    nixPackage = lib.mkOption {
-      default = false;
-      example = true;
-      description = "Whether to manage hyprlock with nix.";
-      type = lib.types.bool;
-    };
   };
 
   config = lib.mkIf (hyprcfg.enable && cfg.enable) {
-    home.packages = with pkgs; [
-    ];
-
-    programs.hyprlock.enable = cfg.nixPackage;
+    programs.hyprlock.enable = true;
+    programs.hyprlock.package = config.lib.nixGL.wrap pkgs.hyprlock;
 
     home.file = {
       ".config/hypr/hyprlock.conf".text = ''

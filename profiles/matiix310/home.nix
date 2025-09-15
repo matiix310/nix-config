@@ -29,14 +29,23 @@ in
 
     # to disable hyprlock
     # hyprlock.enable = false;
-    # to install hyprlock from nixpkgs (bad idea)
-    # hyprlock.nixPackage = true;
 
     # to disable hypridle
     # hypridle.enable = false;
 
     # to disable waybar
     # waybar.enable = false;
+  };
+
+  terminal = {
+    kitty.enable = true;
+
+    # to disable starship
+    # starship.enable = false;
+
+    # You still need to install and setup fish as your default shell
+    # to disable fish plugins
+    # fish.enable = false;
   };
 
   # This value determines the Home Manager release that your configuration is
