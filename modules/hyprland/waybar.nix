@@ -110,8 +110,8 @@ in
             on-click = "playerctl previous";
             on-click-right = "playerctl next";
             format-icons = {
-              Playing = "<span foreground='#B1B946'>󰝚</span>";
-              Paused = "<span foreground='#47423E'>󰝛</span>";
+              Playing = "<span foreground='${config.theme.primary}'>󰝚</span>";
+              Paused = "<span foreground='${config.theme.text-disabled}'>󰝛</span>";
             };
           };
 
@@ -348,13 +348,16 @@ in
         };
       };
       style = ''
-        @define-color primary   #${hyprcfg.theme.primary};
-        @define-color secondary #${hyprcfg.theme.secondary};
-        @define-color accent    #${hyprcfg.theme.accent};
-        @define-color red       #${hyprcfg.theme.red};
-        @define-color green     #${hyprcfg.theme.green};
-        @define-color black     #${hyprcfg.theme.black};
-        @define-color brblack   #${hyprcfg.theme.brblack};
+        @define-color primary       ${config.theme.primary};
+        @define-color secondary     ${config.theme.secondary};
+        @define-color border        ${config.theme.border};
+        @define-color text          ${config.theme.text};
+        @define-color text-disabled ${config.theme.text-disabled};
+
+        @define-color critical      ${config.theme.critical};
+        @define-color warning       ${config.theme.warning};
+        @define-color good          ${config.theme.good};
+        @define-color background    ${config.theme.background};
 
         * {
           border: none;
@@ -369,16 +372,12 @@ in
         }
 
         #workspaces button {
-          color: @secondary;
+          color: @text-disabled;
         }
 
         #workspaces button.persistent {
-          color: @secondary;
+          color: @text-disabled;
         }
-
-        /* #workspaces button.empty {
-          color: @brblack;
-        } */
 
         #workspaces button.active {
           color: @primary;
@@ -393,7 +392,7 @@ in
 
         #clock {
           font-weight: bold;
-          color: @secondary;
+          color: @primary;
         }
 
         #custom-playerctl {
@@ -401,7 +400,7 @@ in
         }
 
         #idle_inhibitor.activated {
-          color: @brblack;
+          color: @text-disabled;
         }
 
         #temperature,
@@ -420,7 +419,7 @@ in
           font-size: 10pt;
           margin: 0;
           padding: 0 10px;
-          color: @white;
+          color: @text;
         }
 
         #bluetooth.connected {
@@ -428,27 +427,27 @@ in
         }
 
         #bluetooth.off {
-          color: @brblack;
+          color: @text-disabled;
         }
 
         #pulseaudio.muted {
-          color: @brblack;
+          color: @text-disabled;
         }
 
         #battery.charging {
-          color: @green;
+          color: @good;
         }
 
         #battery.warning:not(.charging),
         #memory.warning {
           font-weight: bold;
-          color: orange;
+          color: @warning;
         }
 
         #battery.critical:not(.charging),
         #memory.critical {
           font-weight: bold;
-          color: @red;
+          color: @critical;
         }
 
         #custom-playerctl,
@@ -457,8 +456,8 @@ in
         #workspaces,
         #group-applets,
         #group-stats {
-          background: black;
-          border: 2px solid @accent;
+          background: @background;
+          border: 2px solid @border;
           border-radius: 10px;
           padding: 3px 12px;
           margin: 5px 5px 10px 5px;

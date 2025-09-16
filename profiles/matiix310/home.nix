@@ -7,7 +7,7 @@
   ...
 }:
 let
-  theme = import ../../themes/avalon.nix;
+  themeConfig = import ../../themes/avalon.nix;
   monitor = "DP-1";
   ui_scale = 1.5;
 in
@@ -23,9 +23,10 @@ in
     nix.enable = true;
   };
 
+  theme = themeConfig;
+
   hyprland = {
     enable = true;
-    inherit theme;
 
     # to disable hyprlock
     # hyprlock.enable = false;

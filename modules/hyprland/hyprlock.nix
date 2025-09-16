@@ -7,7 +7,7 @@
 let
   hyprcfg = config.hyprland;
   cfg = hyprcfg.hyprlock;
-  theme = config.hyprland.theme;
+  theme = config.theme;
 in
 {
   options.hyprland.hyprlock = {

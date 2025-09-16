@@ -9,8 +9,7 @@ let
 in
 {
   options.hyprland = {
-    enable = lib.mkEnableOption "Hyprland window manager";
-    theme = lib.mkOption { type = lib.types.attrs; };
+    enable = lib.mkEnableOption "Hyprland";
   };
 
   imports = [
@@ -27,13 +26,13 @@ in
 
     home.file = {
       ".config/hypr/hyprpaper.conf".text = ''
-        preload = ${cfg.theme.wallpaper}
+        preload = ${config.theme.wallpaper}
         # If more than one preload is desired then continue to preload other backgrounds
         # preload = /path/to/next_image.png
         # ... more preloads
 
         # Set the default wallpaper(s) seen on initial workspace(s) --depending on the number of monitors used
-        wallpaper = ,${cfg.theme.wallpaper}
+        wallpaper = ,${config.theme.wallpaper}
         # If more than one monitor in use, can load a 2nd image
         # wallpaper = monitor2,/path/to/next_image.png
         # ... more monitors

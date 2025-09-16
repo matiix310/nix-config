@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -18,6 +19,7 @@
   outputs =
     {
       nixpkgs,
+      nixpkgs-unstable,
       home-manager,
       nixgl,
       flake-utils,
@@ -42,7 +44,7 @@
                 inherit system;
                 overlays = [ (nixgl.overlays.default) ];
                 config = {
-                  allowUnfree = true; # needed for nvidia driver
+                  allowUnfree = true;
                 };
               };
               modules = [ ./profiles/${profile}/home.nix ];
@@ -53,6 +55,13 @@
                   configDir
                   nixgl
                   ;
+                pkgs-unstable = import nixpkgs-unstable {
+                  inherit system;
+                  overlays = [ (nixgl.overlays.default) ];
+                  config = {
+                    allowUnfree = true;
+                  };
+                };
               };
             };
           }) profiles

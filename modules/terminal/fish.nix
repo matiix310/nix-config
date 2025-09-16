@@ -7,6 +7,8 @@
 let
   termcfg = config.terminal;
   cfg = termcfg.fish;
+
+  appendIfTrue = condition: str: if condition then str else "";
 in
 {
   options.terminal.fish = {
@@ -31,18 +33,11 @@ in
       }
     ];
     programs.fish.interactiveShellInit = ''
-      # Commands to run in interactive sessions can go here
-
-      # Load starship
-      starship init fish | source
-
       # remove the greeting message
       set fish_greeting ""
 
-      fish_add_path /usr/share/dotnet
-      fish_add_path /usr/share/dotnet-old-versions
-      fish_add_path /home/matiix310/.cargo/bin
-      fish_add_path /home/matiix310/.local/bin
+      fish_add_path "$HOME/.cargo/bin"
+      fish_add_path "$HOME/.local/bin"
 
       # Android
       set -gx ANDROID_HOME "$HOME/Android/Sdk"
@@ -58,13 +53,10 @@ in
       fish_add_path "$BUN_INSTALL/bin"
 
       # direnv
-      direnv hook fish | source
+      command -v direnv >/dev/null && direnv hook fish | source
 
       # SDL
       set -gx SDL_VIDEODRIVER "wayland,x11"
-
-      # Mounette
-      set -gx MOUNETTE_TOKEN 1rCgZzBXnBSbgzsnvGXV
 
       # GDB
       alias gdb "gdb -q"
@@ -78,8 +70,10 @@ in
       alias la 'ls -Al' # show hidden files
       alias ll 'ls -l'
 
-      # fix kitty with ssh
-      alias ssh 'kitty +kitten ssh'
+      ${appendIfTrue config.terminal.starship.enable ''
+        # fix kitty with ssh
+        alias ssh 'kitty +kitten ssh'
+      ''}
 
       # auto connect to wifi portals
       alias wifi-portal 'zen-browser "http://detectportal.firefox.com/canonical.html"'
@@ -88,12 +82,15 @@ in
       pyenv init - | source
 
       # bat alias
-      abbr cat bat
+      command -v bat >/dev/null && abbr cat bat
 
       # podman
-      # set -gx PODMAN_COMPOSE_PROVIDER podman-compose
-      set -gx DOCKER_BUILDKIT 1
-      abbr docker podman
+      command -v podman >/dev/null
+      if test $status -eq 0
+        # set -gx PODMAN_COMPOSE_PROVIDER podman-compose
+        set -gx DOCKER_BUILDKIT 1
+        abbr docker podman
+      end
     '';
   };
 }
