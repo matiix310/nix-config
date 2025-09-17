@@ -6,11 +6,6 @@
   configDir,
   ...
 }:
-let
-  themeConfig = import ../../themes/avalon.nix;
-  monitor = "DP-1";
-  ui_scale = 1.5;
-in
 {
   home.homeDirectory = "/home/${user.username}";
   home.username = user.username;
@@ -19,33 +14,39 @@ in
     ../../modules
   ];
 
+  theme = import ../../themes/avalon.nix;
+
+  monitors = [
+    "eDP-1,3072x1920@60, 0x0, 1.6"
+  ];
+
+  kb_layout = "fr";
+
   lang = {
     nix.enable = true;
   };
 
-  theme = themeConfig;
-
   hyprland = {
     enable = true;
 
-    # to disable hyprlock
+    # To disable hyprlock.
     # hyprlock.enable = false;
 
-    # to disable hypridle
+    # To disable hypridle.
     # hypridle.enable = false;
 
-    # to disable waybar
+    # To disable waybar.
     # waybar.enable = false;
   };
 
   terminal = {
     kitty.enable = true;
 
-    # to disable starship
+    # To disable starship.
     # starship.enable = false;
 
-    # You still need to install and setup fish as your default shell
-    # to disable fish plugins
+    # You still need to install and setup fish as your default shell.
+    # To disable fish plugins.
     # fish.enable = false;
   };
 
