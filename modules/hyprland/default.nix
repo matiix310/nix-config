@@ -185,13 +185,12 @@ in
         bind = [
           "$mainMod, Q, exec, kitty"
           "$mainMod SHIFT, Q, exec, kitty --class neofetch -T neofetch --detach sh -c \"neofetch; read\""
-          "$mainMod, F, exec, zen-browser"
+          "$mainMod, F, exec, command -v zen-browser >/dev/null && zen-browser || firefox"
           "$mainMod, C, killactive,"
           "$mainMod, M, exit, 0"
           "$mainMod, E, exec, thunar"
           "$mainMod, V, togglefloating,"
           "$mainMod, B, pin,"
-          "$mainMod, R, exec, wofi --show drun"
           "$mainMod, P, pseudo," # dwindle
           "$mainMod, J, togglesplit," # dwindle
           "$mainMod, L, exec, hyprlock" # lock the screen
@@ -270,13 +269,13 @@ in
     # wallpaper
     home.file = {
       ".config/hypr/hyprpaper.conf".text = ''
-        preload = ${config.theme.wallpaper}
+        preload = ${theme.wallpaper}
         # If more than one preload is desired then continue to preload other backgrounds
         # preload = /path/to/next_image.png
         # ... more preloads
 
         # Set the default wallpaper(s) seen on initial workspace(s) --depending on the number of monitors used
-        wallpaper = ,${config.theme.wallpaper}
+        wallpaper = ,${theme.wallpaper}
         # If more than one monitor in use, can load a 2nd image
         # wallpaper = monitor2,/path/to/next_image.png
         # ... more monitors
