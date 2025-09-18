@@ -17,6 +17,7 @@ in
     ./waybar.nix
     ./hypridle.nix
     ./hyprlock.nix
+    ./flags.nix
   ];
 
   config = lib.mkIf cfg.enable {

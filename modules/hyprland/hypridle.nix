@@ -13,7 +13,7 @@ in
     enable = lib.mkOption {
       default = true;
       example = false;
-      description = "Whether to enable hypridle.";
+      description = "Whether to enable Hypridle.";
       type = lib.types.bool;
     };
     screenSaverTimeout = lib.mkOption {

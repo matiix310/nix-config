@@ -29,6 +29,12 @@
   hyprland = {
     enable = true;
 
+    # To diable chromium flags.
+    # flags.chromium.enable = false;
+
+    # To diable electron flags.
+    # flags.electron.enable = false;
+
     # To disable hyprlock.
     # hyprlock.enable = false;
 
@@ -48,6 +54,11 @@
     # You still need to install and setup fish as your default shell.
     # To disable fish plugins.
     # fish.enable = false;
+  };
+
+  # additional programs without config
+  programs = {
+    ranger.enable = true;
   };
 
   # This value determines the Home Manager release that your configuration is

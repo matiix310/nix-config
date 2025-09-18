@@ -28,7 +28,7 @@
     flake-utils.lib.eachDefaultSystem (
       system:
       let
-        # pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = nixpkgs.legacyPackages.${system};
         user = import ./user.nix;
         profiles = [
           "matiix310"
@@ -36,6 +36,8 @@
         configDir = "/home/${user.username}/home-manager";
       in
       {
+        devShells = import ./shell.nix { inherit pkgs; };
+
         packages.homeConfigurations = builtins.listToAttrs (
           builtins.map (profile: {
             name = profile;
