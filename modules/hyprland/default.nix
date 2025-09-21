@@ -271,6 +271,12 @@ in
         "plugin:dynamic-cursors" = {
           enabled = true;
           mode = "stretch";
+          shake = {
+            base = 4.0;
+            threshold = 3.0;
+            speed = 0.0;
+            timeout = 500;
+          };
         };
       };
     };
