@@ -7,7 +7,7 @@
 let
   hyprcfg = config.hyprland;
   cfg = hyprcfg.waybar;
-  theme = config.hyprland.theme;
+  theme = config.theme;
 
   scripts = builtins.listToAttrs (
     builtins.map
@@ -110,8 +110,8 @@ in
             on-click = "playerctl previous";
             on-click-right = "playerctl next";
             format-icons = {
-              Playing = "<span foreground='${config.theme.primary}'>󰝚</span>";
-              Paused = "<span foreground='${config.theme.text-disabled}'>󰝛</span>";
+              Playing = "<span foreground='${theme.primary}'>󰝚</span>";
+              Paused = "<span foreground='${theme.text-disabled}'>󰝛</span>";
             };
           };
 
@@ -229,13 +229,13 @@ in
             tooltip = false;
             format = "{icon}";
             "format-icons" = {
-              notification = "󰂚<span foreground='${config.theme.critical}'><sup></sup></span>";
+              notification = "󰂚<span foreground='${theme.critical}'><sup></sup></span>";
               none = "󰂚";
-              dnd-notification = "<span foreground='${config.theme.text-disabled}'>󰂛<sup></sup></span>";
-              dnd-none = "<span foreground='${config.theme.text-disabled}'>󰂛</span>";
-              inhibited-notification = "󰂚<span foreground='${config.theme.critical}'><sup></sup></span>";
+              dnd-notification = "<span foreground='${theme.text-disabled}'>󰂛<sup></sup></span>";
+              dnd-none = "<span foreground='${theme.text-disabled}'>󰂛</span>";
+              inhibited-notification = "󰂚<span foreground='${theme.critical}'><sup></sup></span>";
               inhibited-none = "󰂚";
-              dnd-inhibited-notification = "󰂛<span foreground='${config.theme.critical}'><sup></sup></span>";
+              dnd-inhibited-notification = "󰂛<span foreground='${theme.critical}'><sup></sup></span>";
               dnd-inhibited-none = "󰂛";
             };
             return-type = "json";
@@ -348,16 +348,16 @@ in
         };
       };
       style = ''
-        @define-color primary       ${config.theme.primary};
-        @define-color secondary     ${config.theme.secondary};
-        @define-color border        ${config.theme.border};
-        @define-color text          ${config.theme.text};
-        @define-color text-disabled ${config.theme.text-disabled};
+        @define-color primary       ${theme.primary};
+        @define-color secondary     ${theme.secondary};
+        @define-color border        ${theme.border};
+        @define-color text          ${theme.text};
+        @define-color text-disabled ${theme.text-disabled};
 
-        @define-color critical      ${config.theme.critical};
-        @define-color warning       ${config.theme.warning};
-        @define-color good          ${config.theme.good};
-        @define-color background    ${config.theme.background};
+        @define-color critical      ${theme.critical};
+        @define-color warning       ${theme.warning};
+        @define-color good          ${theme.good};
+        @define-color background    ${theme.background};
 
         * {
           border: none;
@@ -458,7 +458,7 @@ in
         #group-stats {
           background: @background;
           border: 2px solid @border;
-          border-radius: 10px;
+          border-radius: ${toString theme.roundness}px;
           padding: 3px 12px;
           margin: 5px 5px 10px 5px;
         }

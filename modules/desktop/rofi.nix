@@ -45,7 +45,6 @@ in
           primary = mkLiteral theme.primary;
           secondary = mkLiteral theme.secondary;
           primary-gradient = mkLiteral theme.primary-gradient;
-          border = mkLiteral theme.border;
           fg-col = mkLiteral "#cdd6f4";
           grey = mkLiteral "#6c7086";
 
@@ -61,7 +60,7 @@ in
         window = {
           height = mkLiteral "360px";
           border = mkLiteral "2px";
-          border-radius = mkLiteral "10px";
+          border-radius = mkLiteral "${toString theme.roundness}px";
           border-color = mkLiteral "@primary";
           background-color = mkLiteral "@background";
           # background-image = mkLiteral "linear-gradient(45deg,${theme.primary},${theme.primary-gradient})";
@@ -78,7 +77,7 @@ in
             (mkLiteral "entry")
           ];
           background-color = mkLiteral "@background";
-          border-radius = mkLiteral "5px";
+          border-radius = mkLiteral "${toString theme.roundness}px";
           padding = mkLiteral "2px";
         };
 
@@ -86,7 +85,7 @@ in
           background-image = mkLiteral "linear-gradient(45deg,${theme.primary},${theme.primary-gradient})";
           padding = mkLiteral "6px";
           text-color = mkLiteral "@background";
-          border-radius = mkLiteral "3px";
+          border-radius = mkLiteral "${toString theme.roundness}px";
           margin = mkLiteral "20px 0px 0px 20px";
         };
 
@@ -147,7 +146,7 @@ in
           background-color = mkLiteral "@background";
           margin = mkLiteral "2px";
           padding = mkLiteral "2px";
-          border-radius = mkLiteral "5px";
+          border-radius = mkLiteral "${toString theme.roundness}px";
         };
 
         textbox = {

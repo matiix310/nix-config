@@ -18,6 +18,7 @@ in
     ./hypridle.nix
     ./hyprlock.nix
     ./flags.nix
+    ./swaync.nix
   ];
 
   config = lib.mkIf cfg.enable {
@@ -31,6 +32,7 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
       package = null;
+      # plugins = [ pkgs.hyprlandPlugins.hypr-dynamic-cursors ];
       settings = {
         "$inactive" = "0xff" + (lib.strings.removePrefix "#" theme.inactive);
         "$primary" = "0xff" + (lib.strings.removePrefix "#" theme.primary);
@@ -109,7 +111,7 @@ in
           active_opacity = 0.9;
           inactive_opacity = 0.7;
           fullscreen_opacity = 1.0;
-          rounding = 10;
+          rounding = theme.roundness;
 
           blur = {
             enabled = true;
@@ -264,6 +266,12 @@ in
           # Swipe gesture
           "3, horizontal, workspace"
         ];
+
+        # Plugins
+        "plugin:dynamic-cursors" = {
+          enabled = true;
+          mode = "stretch";
+        };
       };
     };
 

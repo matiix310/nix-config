@@ -29,6 +29,9 @@
   hyprland = {
     enable = true;
 
+    # To diable swaync.
+    # swaync.enable = false;
+
     # To diable chromium flags.
     # flags.chromium.enable = false;
 
@@ -56,7 +59,7 @@
     # fish.enable = false;
   };
 
-  # additional programs without config
+  # additional programs without custom config
   programs = {
     ranger.enable = true;
   };
