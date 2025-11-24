@@ -26,11 +26,11 @@ in
       hyprpaper
     ];
 
-    xdg.portal.config.common.default = "*";
+    # xdg.portal.config.common.default = "*";
 
     # hyprland
     wayland.windowManager.hyprland = {
-      enable = true;
+      enable = false;
       package = null;
       # plugins = [ pkgs.hyprlandPlugins.hypr-dynamic-cursors ];
       settings = {

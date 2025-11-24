@@ -31,6 +31,10 @@ in
         name = "z";
         src = pkgs.fishPlugins.z.src;
       }
+      {
+        name = "bass";
+        src = pkgs.fishPlugins.bass.src;
+      }
     ];
     programs.fish.interactiveShellInit = ''
       # remove the greeting message
@@ -70,9 +74,10 @@ in
       alias la 'ls -Al' # show hidden files
       alias ll 'ls -l'
 
-      ${appendIfTrue config.terminal.starship.enable ''
+      ${appendIfTrue config.terminal.kitty.enable ''
         # fix kitty with ssh
         alias ssh 'kitty +kitten ssh'
+        set -gx TERM kitty
       ''}
 
       # auto connect to wifi portals
