@@ -68,6 +68,12 @@ in
       # clear alias
       alias c="clear"
 
+      # mkcd
+      function mkcd --description "mkdir && cd"
+        mkdir -p $argv[1]
+        cd $argv[1]
+      end
+
       # Directory Listing aliases
       alias ls 'ls --color=auto'
       alias l 'ls -lathF' # long, sort by newest to oldest
