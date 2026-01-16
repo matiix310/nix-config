@@ -35,10 +35,24 @@ in
 
     home.file = {
       ".config/hypr/hypridle.conf".text = ''
+        general {
+            ${if hyprcfg.hyprlock.enable then ''
+            lock_cmd = pidof hyprlock || hyprlock       # avoid starting multiple hyprlock instances.
+            before_sleep_cmd = loginctl lock-session    # lock before suspend.
+            '' else ""}
+            after_sleep_cmd = hyprctl dispatch dpms on  # to avoid having to press a key twice to turn on the display.
+        }
+
         listener {
             timeout = ${toString cfg.screenSaverTimeout}
             on-timeout = brightnessctl -s set 5    # set monitor backlight to minimum, avoid 0 on OLED monitor.
             on-resume = brightnessctl -r           # monitor backlight restor.
+        }
+
+        listener {
+            timeout = ${toString cfg.screenSaverTimeout}
+            on-timeout = brightnessctl -sd platform::kbd_backlight set 0 # turn off keyboard backlight.
+            on-resume = brightnessctl -rd platform::kbd_backlight        # turn on keyboard backlight.
         }
 
         listener {
