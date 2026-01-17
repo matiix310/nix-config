@@ -28,257 +28,236 @@ in
 
     # xdg.portal.config.common.default = "*";
 
-    # hyprland
-    wayland.windowManager.hyprland = {
-      enable = false;
-      package = null;
-      # plugins = [ pkgs.hyprlandPlugins.hypr-dynamic-cursors ];
-      settings = {
-        "$inactive" = "0xff" + (lib.strings.removePrefix "#" theme.inactive);
-        "$primary" = "0xff" + (lib.strings.removePrefix "#" theme.primary);
-        "$primary-gradient" = "0xff" + (lib.strings.removePrefix "#" theme.primary-gradient);
-        monitor = [
-          ",preferred,auto,1"
-          "Unknown-1, disable"
-        ]
-        ++ config.monitors;
-        # monitor=HDMI-A-1,1920x1080@60, 3072x0, 1
-        # monitor=,highres,auto,1.6
-        # monitor=HDMI-A-1,1920x1080@60, -1920x0, 1
+    home.file = {
+        ".config/hypr/hyprland.conf".text = ''
+            $inactive = 0xff${lib.strings.removePrefix "#" theme.inactive}
+            $primary = 0xff${lib.strings.removePrefix "#" theme.primary}
+            $primary_gradient = 0xff${lib.strings.removePrefix "#" theme.primary-gradient}
 
-        # toolkit-specific scale
-        # env = ELM_SCALE,1
-        # env = GDK_SCALE,1
-        env = [
-          "XCURSOR_SIZE,24"
-          # electron flag to run on wayland
-          "ELECTRON_OZONE_PLATFORM_HINT,wayland"
-          # enable wayland for Qt
-          "QT_QPA_PLATFORM,wayland;xcb"
-          "QT_SCALE_FACTOR_ROUNDING_POLICY,RoundPreferFloor"
-        ];
+            # See https://wiki.hyprland.org/Configuring/Monitors/
+            monitor = ,preferred,auto,1
+            # disable unknown monitor
+            monitor = Unknown-1, disable
+            ${lib.concatStringsSep "\n" (map (m: "monitor = ${m}") config.monitors)}
 
-        # See https://wiki.hyprland.org/Configuring/Keywords/ for more
+            # toolkit-specific scale
+            # env = ELM_SCALE,1
+            # env = GDK_SCALE,1
+            env = XCURSOR_SIZE,24
 
-        exec-once = [
-          # Execute at launch.
-          # The commands not available wont be a probleme
-          "systemctl --user start hyprpolkitagent"
-          "hyprsunset"
-          "waybar"
-          "hyprpaper"
-          "swaync"
-          "hypridle"
-        ];
+            # electron flag to run on wayland
+            env = ELECTRON_OZONE_PLATFORM_HINT,wayland
 
-        # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-        input = {
-          kb_layout = config.kb_layout;
-          kb_variant = "";
-          kb_model = "";
-          kb_options = "grp:alt_shift_toggle";
-          kb_rules = "";
+            # enable wayland for Qt
+            env = QT_QPA_PLATFORM,wayland;xcb
+            env = QT_SCALE_FACTOR_ROUNDING_POLICY,RoundPreferFloor
 
-          follow_mouse = 1;
+            # See https://wiki.hyprland.org/Configuring/Keywords/ for more
 
-          touchpad = {
-            natural_scroll = "yes";
-          };
+            # Execute your favorite apps at launch
+            exec-once = systemctl --user start hyprpolkitagent
+            exec-once = hyprsunset
+            exec-once = waybar & fcitx
+            exec-once = lxsession
+            # This will make sure that xdg-desktop-portal-hyprland can get the required variables on startup.
+            exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+            # exec-once = swaybg -m fill -i /home/matiix310/.config/hypr/background.png
+            # exec-once = ~/.config/hypr/choose_wallpaper.sh | xargs swaybg -m fill -i
+            exec-once = hyprpaper
+            exec-once = swaync
+            exec-once = hypridle
 
-          sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
-        };
+            source = ~/.config/hypr/mocha.conf
 
-        # unscale XWayland
-        xwayland = {
-          force_zero_scaling = true;
-        };
+            # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
+            input {
+                kb_layout = fr
+                kb_variant =
+                kb_model =
+                kb_options = grp:alt_shift_toggle
+                kb_rules =
 
-        general = {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
+                follow_mouse = 1
 
-          gaps_in = 5;
-          gaps_out = 5;
-          border_size = 2;
-          "col.active_border" = "$primary $primary-gradient 45deg";
-          "col.inactive_border" = "$inactive";
+                touchpad {
+                    natural_scroll = yes
+                }
 
-          layout = "dwindle";
-        };
+                sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
+            }
 
-        decoration = {
-          # See https://wiki.hyprland.org/Configuring/Variables/ for more
+            # unscale XWayland
+            xwayland {
+                force_zero_scaling = true
+            }
 
-          active_opacity = 0.9;
-          inactive_opacity = 0.7;
-          fullscreen_opacity = 1.0;
-          rounding = theme.roundness;
+            general {
+                # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
-          blur = {
-            enabled = true;
-            size = 8;
-            new_optimizations = true;
-          };
-        };
+                gaps_in = 5
+                gaps_out = 5
+                border_size = 2
+                col.active_border = $primary $primary_gradient 45deg
+                col.inactive_border = $inactive
 
-        animations = {
-          enabled = "yes";
+                layout = dwindle
+            }
 
-          # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
+            decoration {
+                # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
-          bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+                active_opacity = 0.9
+                inactive_opacity = 0.7
+                fullscreen_opacity = 1.0
+                rounding = ${builtins.toString theme.roundness}
 
-          animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
-            "windowsMove, 1, 7, default"
-            "border, 1, 10, default"
-            "borderangle, 1, 8, default"
-            "fade, 1, 7, default"
-            "workspaces, 1, 6, default"
-          ];
-        };
+                shadow {
+                    enabled = false
+                }
 
-        dwindle = {
-          # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-          pseudotile = "yes"; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-          preserve_split = "yes"; # you probably want this
-        };
+                blur {
+                    enabled = true # OPTI: false
+                    size = 8
+                    # passes = 1
+                    new_optimizations = true
+                }
 
-        master = {
-          # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-          new_status = "master";
-        };
+                # drop_shadow = false
+                # shadow_range = 4
+                # shadow_render_power = 3
+                # col.shadow = rgba(1a1a1aee)
+            }
 
-        misc = {
-          vfr = true;
-          disable_hyprland_logo = true; # :'(
-        };
+            animations {
+                enabled = yes # OPTI: no
 
-        # Example windowrule v1
-        # windowrule = float, ^(kitty)$
-        # Example windowrule v2
-        # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-        # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-        windowrulev2 = [
-          "opacity 1.0 override, class:^firefox$"
-          "opacity 1.0 override, class:^zen$"
-          "opacity 1.0 override, class:^(jetbrains-(?!toolbox).*)$"
-          "tile, class:^(jetbrains-(?!toolbox).*)$"
-          "float, class:^(jetbrains-(?!toolbox).*)$, title:^(win[0-9]*)$"
-          "nofocus, class:^(jetbrains-(?!toolbox).*)$, title:^(win[0-9]*)$"
-          "move 10 60, title:^(JetBrains Toolbox)$"
+                # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
 
-          # Display neofetch in a custom window
-          "size 900 450, class:neofetch"
-          "float, class:neofetch"
-          "opacity 1.0 override, class:neofetch"
+                bezier = myBezier, 0.05, 0.9, 0.1, 1.05
 
-          # Rules to enable screensharing between X and Wayland apps
-          "opacity 0.0 override 0.0 override,class:^(xwaylandvideobridge)$"
-          "noanim,class:^(xwaylandvideobridge)$"
-          "noinitialfocus,class:^(xwaylandvideobridge)$"
-          "maxsize 1 1,class:^(xwaylandvideobridge)$"
-          "noblur,class:^(xwaylandvideobridge)$"
-        ];
+                animation = windows, 1, 7, myBezier
+                animation = windowsOut, 1, 7, default, popin 80%
+                animation = border, 1, 10, default
+                animation = borderangle, 1, 8, default
+                animation = fade, 1, 7, default
+                animation = workspaces, 1, 6, default
+            }
 
-        # See https://wiki.hyprland.org/Configuring/Keywords/ for more
-        "$mainMod" = "SUPER";
+            dwindle {
+                # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+                pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+                preserve_split = yes # you probably want this
+            }
 
-        # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-        bind = [
-          "$mainMod, Q, exec, kitty"
-          "$mainMod SHIFT, Q, exec, kitty --class neofetch -T neofetch --detach sh -c \"neofetch; read\""
-          "$mainMod, F, exec, command -v zen-browser >/dev/null && zen-browser || firefox"
-          "$mainMod, C, killactive,"
-          "$mainMod, M, exit, 0"
-          "$mainMod, E, exec, thunar"
-          "$mainMod, V, togglefloating,"
-          "$mainMod, B, pin,"
-          "$mainMod, P, pseudo," # dwindle
-          "$mainMod, J, togglesplit," # dwindle
-          "$mainMod, L, exec, hyprlock" # lock the screen
-          "$mainMod, A, exec, rofi -show drun" # open the app search engine
-          "$mainMod, X, fullscreen"
+            master {
+                # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+                new_status = master
+            }
 
-          # Move focus with mainMod + arrow keys
-          "$mainMod, left, movefocus, l"
-          "$mainMod, right, movefocus, r"
-          "$mainMod, up, movefocus, u"
-          "$mainMod, down, movefocus, d"
+            misc {
+                vfr = true
+                disable_hyprland_logo = true # :'(
+            }
 
-          # Switch workspaces with mainMod + [0-9]
-          "$mainMod, ampersand, workspace, 1"
-          "$mainMod, eacute, workspace, 2"
-          "$mainMod, quotedbl, workspace, 3"
-          "$mainMod, apostrophe, workspace, 4"
-          "$mainMod, parenleft, workspace, 5"
-          "$mainMod, minus, workspace, 6"
-          "$mainMod, egrave, workspace, 7"
-          "$mainMod, underscore, workspace, 8"
-          "$mainMod, ccedilla, workspace, 9"
-          "$mainMod, agrave, workspace, 10"
+            # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+            windowrule = opacity 1.0 override, match:class ^firefox$
+            windowrule = opacity 1.0 override, match:class ^zen$
+            windowrule = opacity 1.0 override, match:class ^(jetbrains-(?!toolbox).*)$
+            windowrule = tile on, match:class ^(jetbrains-(?!toolbox).*)$
+            windowrule = float on, match:class ^(jetbrains-(?!toolbox).*)$, match:title ^(win[0-9]*)$
+            windowrule = no_focus on, match:class ^(jetbrains-(?!toolbox).*)$, match:title ^(win[0-9]*)$
+            windowrule = move 10 60, match:title ^(JetBrains Toolbox)$
 
-          # Move active window to a workspace with mainMod + SHIFT + [0-9]
-          "$mainMod SHIFT, ampersand, movetoworkspace, 1"
-          "$mainMod SHIFT, eacute, movetoworkspace, 2"
-          "$mainMod SHIFT, quotedbl, movetoworkspace, 3"
-          "$mainMod SHIFT, apostrophe, movetoworkspace, 4"
-          "$mainMod SHIFT, parenleft, movetoworkspace, 5"
-          "$mainMod SHIFT, minus, movetoworkspace, 6"
-          "$mainMod SHIFT, egrave, movetoworkspace, 7"
-          "$mainMod SHIFT, underscore, movetoworkspace, 8"
-          "$mainMod SHIFT, ccedilla, movetoworkspace, 9"
-          "$mainMod SHIFT, agrave, movetoworkspace, 10"
+            # Display neofetch in a custom window
+            windowrule = size 900 450, match:class neofetch
+            windowrule = float on, match:class neofetch
+            windowrule = opacity 1.0 override, match:class neofetch
 
-          # Scroll through existing workspaces with mainMod + scroll
-          "$mainMod, mouse_down, workspace, e+1"
-          "$mainMod, mouse_up, workspace, e-1"
+            # Rules to enable screensharing between X and Wayland apps
+            windowrule = opacity 0.0 override 0.0 override, match:class ^(xwaylandvideobridge)$
+            windowrule = no_anim on, match:class ^(xwaylandvideobridge)$
+            windowrule = no_initial_focus on, match:class ^(xwaylandvideobridge)$
+            windowrule = max_size 1 1, match:class ^(xwaylandvideobridge)$
+            windowrule = no_blur on, match:class ^(xwaylandvideobridge)$
 
-          # Screenshot (for some reason S = "Impéc key)
-          "$mainMod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
+            # See https://wiki.hyprland.org/Configuring/Keywords/ for more
+            $mainMod = SUPER
 
-          # Notification
-          "$mainMod SHIFT, N, exec, swaync-client -t -sw"
-        ];
+            # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
+            bind = $mainMod, Q, exec, kitty
+            bind = $mainMod SHIFT, Q, exec, kitty --class neofetch -T neofetch --detach sh -c "neofetch; read"
+            bind = $mainMod, F, exec, zen-browser
+            bind = $mainMod, C, killactive,
+            bind = $mainMod, M, exit, 0
+            bind = $mainMod, E, exec, thunar
+            bind = $mainMod, V, togglefloating,
+            bind = $mainMod, B, pin,
+            bind = $mainMod, R, exec, wofi --show drun
+            bind = $mainMod, P, pseudo, # dwindle
+            bind = $mainMod, J, togglesplit, # dwindle
+            bind = $mainMod, L, exec, hyprlock # lock the screen
+            bind = $mainMod, A, exec, rofi -show drun # open the app search engine
+            bind = $mainMod, X, fullscreen
+            # bind = $mainMod, D, exec, /home/matiix310/perso/rust/smart-lock/target/release/smart-lock
 
-        bindm = [
-          # Move/resize windows with mainMod + LMB/RMB and dragging
-          "$mainMod, mouse:272, movewindow"
-          "$mainMod, mouse:273, resizewindow"
-        ];
+            # Move focus with mainMod + arrow keys
+            bind = $mainMod, left, movefocus, l
+            bind = $mainMod, right, movefocus, r
+            bind = $mainMod, up, movefocus, u
+            bind = $mainMod, down, movefocus, d
 
-        binde = [
-          # Volume control
-          ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%"
-          ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%"
-          ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
-          ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+            # Switch workspaces with mainMod + [0-9]
+            bind = $mainMod, ampersand, workspace, 1
+            bind = $mainMod, eacute, workspace, 2
+            bind = $mainMod, quotedbl, workspace, 3
+            bind = $mainMod, apostrophe, workspace, 4
+            bind = $mainMod, parenleft, workspace, 5
+            bind = $mainMod, minus, workspace, 6
+            bind = $mainMod, egrave, workspace, 7
+            bind = $mainMod, underscore, workspace, 8
+            bind = $mainMod, ccedilla, workspace, 9
+            bind = $mainMod, agrave, workspace, 10
 
-          # Brightness control
-          ", XF86MonBrightnessUp, exec, brightnessctl set 10%+"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
+            # Move active window to a workspace with mainMod + SHIFT + [0-9]
+            bind = $mainMod SHIFT, ampersand, movetoworkspace, 1
+            bind = $mainMod SHIFT, eacute, movetoworkspace, 2
+            bind = $mainMod SHIFT, quotedbl, movetoworkspace, 3
+            bind = $mainMod SHIFT, apostrophe, movetoworkspace, 4
+            bind = $mainMod SHIFT, parenleft, movetoworkspace, 5
+            bind = $mainMod SHIFT, minus, movetoworkspace, 6
+            bind = $mainMod SHIFT, egrave, movetoworkspace, 7
+            bind = $mainMod SHIFT, underscore, movetoworkspace, 8
+            bind = $mainMod SHIFT, ccedilla, movetoworkspace, 9
+            bind = $mainMod SHIFT, agrave, movetoworkspace, 10
 
-          # Screenshot (for some reason S = "Impéc key)
-          "$mainMod, S, exec, grim -g \"$(slurp)\""
-        ];
+            # Scroll through existing workspaces with mainMod + scroll
+            bind = $mainMod, mouse_down, workspace, e+1
+            bind = $mainMod, mouse_up, workspace, e-1
 
-        gesture = [
-          # Swipe gesture
-          "3, horizontal, workspace"
-        ];
+            # Move/resize windows with mainMod + LMB/RMB and dragging
+            bindm = $mainMod, mouse:272, movewindow
+            bindm = $mainMod, mouse:273, resizewindow
 
-        # Plugins
-        "plugin:dynamic-cursors" = {
-          enabled = true;
-          mode = "stretch";
-          shake = {
-            base = 4.0;
-            threshold = 3.0;
-            speed = 0.0;
-            timeout = 500;
-          };
-        };
-      };
+            # Volume control
+            binde = , XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +5%
+            binde = , XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -5%
+            binde = , XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle
+            binde = , XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+            # Brightness control
+            binde = , XF86MonBrightnessUp, exec, brightnessctl set 10%+
+            binde = , XF86MonBrightnessDown, exec, brightnessctl set 10%-
+
+            # Screenshot (for some reason S = Impéc key)
+            binde = $mainMod, S, exec, grim -g "$(slurp)"
+            bind = $mainMod SHIFT, S, exec, grim -g "$(slurp)" - | wl-copy
+
+            # Notification
+            bind = $mainMod SHIFT, N, exec, swaync-client -t -sw
+
+            # Swipe gesture
+            gesture = 3, horizontal, workspace
+        '';
     };
 
     # wallpaper
