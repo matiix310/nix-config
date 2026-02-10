@@ -96,12 +96,12 @@ in
       command -v bat >/dev/null && abbr cat bat
 
       # podman
-      command -v podman >/dev/null
-      if test $status -eq 0
-        # set -gx PODMAN_COMPOSE_PROVIDER podman-compose
-        set -gx DOCKER_BUILDKIT 1
-        abbr docker podman
-      end
+      # command -v podman >/dev/null
+      # if test $status -eq 0
+      #   # set -gx PODMAN_COMPOSE_PROVIDER podman-compose
+      #   set -gx DOCKER_BUILDKIT 1
+      #   abbr docker podman
+      # end
     '';
   };
 }
