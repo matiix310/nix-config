@@ -18,7 +18,8 @@
 
   monitors = [
     "eDP-1,3072x1920@60, 0x0, 1.6"
-    "HDMI-A-1,1920x1080@60, -1920x0, 1"
+    "HDMI-A-1,1920x1080@60, auto-center-up, 1"
+    "DP-3, 1920x1080@60, auto-center-up, 1"
   ];
 
   kb_layout = "fr";
