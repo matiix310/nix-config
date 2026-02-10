@@ -46,7 +46,7 @@ in
 
       status = {
         symbol = "";
-        format = "[\[$symbol$status\]]($style) ";
+        format = "[$symbol $status]($style) ";
         map_symbol = true;
         disabled = false;
       };
